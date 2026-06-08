@@ -1,8 +1,4 @@
-{
-  lib,
-  pkgs,
-  ...
-}: {
+{lib, ...}: {
   keymaps = [
     {
       mode = "n";
@@ -35,16 +31,7 @@
     helm_ls.enable = true;
     tofu_ls.enable = true;
     rust_analyzer.enable = true;
-    astro = {
-      enable = true;
-      # The Nix astro-language-server package does not expose TypeScript in
-      # Node's module resolution path, but astro-ls requires("typescript") at
-      # startup and also requires a TypeScript SDK path during initialization.
-      config = {
-        cmd_env.NODE_PATH = lib.makeSearchPath "lib/node_modules" [pkgs.typescript];
-        init_options.typescript.tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib";
-      };
-    };
+    astro.enable = true;
     tsgo.enable = true;
   };
 }
