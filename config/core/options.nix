@@ -2,7 +2,25 @@
   viAlias = true;
   vimAlias = true;
 
-  performance.byteCompileLua.enable = true;
+  performance = {
+    byteCompileLua = {
+      enable = true;
+      configs = true;
+      initLua = true;
+      luaLib = true;
+      nvimRuntime = true;
+      plugins = true;
+    };
+
+    combinePlugins = {
+      enable = true;
+      standalonePlugins = [
+        "conform.nvim"
+        "copilot.lua"
+        "snacks.nvim"
+      ];
+    };
+  };
 
   withNodeJs = false;
   withPerl = false;
