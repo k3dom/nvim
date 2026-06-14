@@ -5,6 +5,7 @@
     ./mini.nix
     ./treesitter.nix
     ./copilot.nix
+    ./fff.nix
     ./snacks.nix
     ./conform.nix
   ];
