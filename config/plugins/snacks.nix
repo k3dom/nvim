@@ -29,7 +29,7 @@
       lazygit.enabled = true;
       zen = {
         toggles.dim = false;
-        win.backdrop = false;
+        win.backdrop.transparent = false;
       };
     };
   };
