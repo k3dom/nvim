@@ -1,4 +1,10 @@
-{lib, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
+  extraPackages = [pkgs.lazygit];
+
   keymaps = [
     {
       mode = [
