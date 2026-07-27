@@ -1,28 +1,4 @@
-{
-  lib,
-  pkgs,
-  ...
-}: let
-  fff = pkgs.vimPlugins.fff-nvim;
-
-  # zlob otherwise uses Zig's native CPU target. Cached builds can then contain
-  # instructions (such as AVX-512) that are unsupported by the local CPU.
-  fffLib = fff.fff-nvim-lib.overrideAttrs (oldAttrs: {
-    env = (oldAttrs.env or {}) // {CI = true;};
-  });
-
-  fffPackage = fff.overrideAttrs (oldAttrs: {
-    postPatch =
-      (oldAttrs.postPatch or "")
-      + ''
-        substituteInPlace lua/fff/download.lua \
-          --replace-fail \
-            '${fff.fff-nvim-lib}' \
-            '${fffLib}'
-      '';
-    passthru = (oldAttrs.passthru or {}) // {fff-nvim-lib = fffLib;};
-  });
-in {
+{lib, ...}: {
   keymaps = [
     {
       mode = "n";
@@ -44,7 +20,6 @@ in {
 
   plugins.fff = {
     enable = true;
-    package = fffPackage;
     settings = {
       layout.prompt_position = "top";
     };
