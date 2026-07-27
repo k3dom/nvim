@@ -1,28 +1,28 @@
 {lib, ...}: {
-  autoGroups = let
-    o.clear = true;
-  in {
-    highlight_yank = o;
-    resize_splits = o;
-    format_options = o;
-    check_time = o;
-    man_unlisted = o;
-    mini_split = o;
+  autoGroups = {
+    highlight_yank = {};
+    resize_splits = {};
+    format_options = {};
+    check_time = {};
+    man_unlisted = {};
+    mini_split = {};
   };
 
   autoCmd = [
     {
       group = "highlight_yank";
       event = ["TextYankPost"];
+      desc = "Briefly highlight yanked text";
       callback = lib.nixvim.mkRaw ''
         function()
-          vim.highlight.on_yank()
+          vim.hl.on_yank()
         end
       '';
     }
     {
       group = "resize_splits";
       event = ["VimResized"];
+      desc = "Equalize split sizes when the terminal is resized";
       callback = lib.nixvim.mkRaw ''
         function()
           local current_tab = vim.fn.tabpagenr()
@@ -38,6 +38,7 @@
         "TermClose"
         "TermLeave"
       ];
+      desc = "Reload buffers changed outside of neovim";
       callback = lib.nixvim.mkRaw ''
         function()
           if vim.o.buftype ~= "nofile" then
@@ -49,6 +50,7 @@
     {
       group = "format_options";
       event = ["FileType"];
+      desc = "Never auto-insert comment leaders on newlines";
       callback = lib.nixvim.mkRaw ''
         function()
           vim.bo.formatoptions = vim.bo.formatoptions:gsub("[co]", "")
@@ -59,6 +61,7 @@
       group = "man_unlisted";
       event = ["FileType"];
       pattern = ["man"];
+      desc = "Keep man pages out of the buffer list";
       callback = lib.nixvim.mkRaw ''
         function(event)
           vim.bo[event.buf].buflisted = false
@@ -69,6 +72,7 @@
       group = "mini_split";
       event = ["User"];
       pattern = ["MiniFilesBufferCreate"];
+      desc = "Open files from mini.files in a split";
       callback = lib.nixvim.mkRaw ''
         function(args)
           local map_split = function(buf_id, lhs, direction)
