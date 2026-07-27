@@ -38,13 +38,32 @@
     }: {
       default = inputs.nixvim.lib.${system}.check.mkTestDerivationFromNixvimModule (nixvimModule pkgs);
     });
-    devShells = eachSupportedSystem ({pkgs, ...}: {
+    devShells = eachSupportedSystem ({pkgs, ...}: let
+      # Single entry point so CI and local runs cannot drift apart.
+      ci = pkgs.writeShellApplication {
+        name = "ci";
+        runtimeInputs = with pkgs; [alejandra statix];
+        text = ''
+          alejandra --check .
+          statix check
+        '';
+      };
+    in {
       default = pkgs.mkShell {
-        packages = with pkgs; [
-          statix
-        ];
+        packages =
+          [ci]
+          ++ (with pkgs; [
+            alejandra
+            statix
+            zizmor
+          ]);
       };
     });
-    formatter = eachSupportedSystem ({pkgs, ...}: pkgs.alejandra);
+    # `nix fmt` invokes the formatter without arguments, and bare alejandra then
+    # reads stdin instead of the tree.
+    formatter = eachSupportedSystem ({pkgs, ...}:
+      pkgs.writeShellScriptBin "alejandra" ''
+        exec ${pkgs.lib.getExe pkgs.alejandra} "''${@:-.}"
+      '');
   };
 }
