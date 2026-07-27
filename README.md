@@ -2,7 +2,7 @@
 
 Personal neovim configuration made with Nix and [nixvim](https://github.com/nix-community/nixvim).
 
-[![Build status](https://github.com/kedom1337/nvim/workflows/ci/badge.svg)](https://github.com/kedom1337/nvim/actions)
+[![Build status](https://github.com/k3dom/nvim/workflows/ci/badge.svg)](https://github.com/k3dom/nvim/actions)
 
 ## Usage
 
@@ -29,7 +29,7 @@ In your `flake.nix`, add your Neovim configuration repository as an input:
   inputs = {
     # ... other inputs ...
     neovim-config = {
-      url = "github:kedom1337/nvim";
+      url = "github:k3dom/nvim";
       # Optionally, specify a ref or branch if needed.
     };
   };
