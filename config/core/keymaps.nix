@@ -4,11 +4,13 @@
       mode = "v";
       key = "<";
       action = "<gv";
+      options.desc = "Dedent and keep selection";
     }
     {
       mode = "v";
       key = ">";
       action = ">gv";
+      options.desc = "Indent and keep selection";
     }
     {
       mode = "n";
