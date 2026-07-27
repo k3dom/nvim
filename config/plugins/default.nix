@@ -13,7 +13,6 @@
   plugins = {
     ts-autotag.enable = true;
     fidget.enable = true;
-    web-devicons.enable = true;
     schemastore.enable = true;
   };
 }
