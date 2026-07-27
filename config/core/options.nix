@@ -15,15 +15,17 @@
     combinePlugins = {
       enable = true;
       standalonePlugins = [
+        # `doc/recipes.md` collides with blink.cmp.
         "conform.nvim"
+        # Looks up `copilot/js/language-server.js` via `nvim_get_runtime_file`,
+        # and `/copilot` is not among the linked runtime paths.
         "copilot.lua"
+        # `queries/lua/injections.scm` collides with the treesitter queries.
         "snacks.nvim"
       ];
     };
   };
 
-  withNodeJs = false;
-  withPerl = false;
   withPython3 = false;
   withRuby = false;
 
@@ -35,6 +37,11 @@
   globals = {
     mapleader = " ";
     maplocalleader = " ";
+  };
+
+  diagnostic.settings = {
+    severity_sort = true;
+    virtual_text = true;
   };
 
   opts = {
@@ -77,10 +84,10 @@
 
     ignorecase = true;
     smartcase = true;
-    incsearch = true;
     infercase = true;
 
     spelllang = "en,de";
+    confirm = true;
     swapfile = false;
   };
 }
