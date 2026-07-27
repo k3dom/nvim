@@ -24,6 +24,12 @@
     }
     {
       mode = "n";
+      key = "<leader>tw";
+      action = "<cmd>setlocal wrap!<cr>";
+      options.desc = "Toggle line wrapping";
+    }
+    {
+      mode = "n";
       key = "<c-h>";
       action = "<c-w>h";
       options = {
