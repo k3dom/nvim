@@ -6,37 +6,40 @@
     neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
   };
   outputs = {nixpkgs, ...} @ inputs: let
-    useNightly = false;
     eachSupportedSystem = f:
       nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (system:
         f {
           inherit system;
           pkgs = import nixpkgs {
             inherit system;
-            overlays = nixpkgs.lib.optionals useNightly [
-              inputs.neovim-nightly.overlays.default
-            ];
+            config.allowUnfreePredicate = pkg: nixpkgs.lib.getName pkg == "copilot-language-server";
           };
         });
-    nixvimModule = pkgs: {
-      inherit pkgs;
-      module = ./config;
-      extraSpecialArgs = {
-        inherit inputs;
+    nixvimFor = pkgs:
+      inputs.nixvim.lib.evalNixvim {
+        modules = [
+          ./config
+          {nixpkgs.pkgs = pkgs;}
+        ];
       };
-    };
   in {
     packages = eachSupportedSystem ({
       pkgs,
       system,
-    }: {
-      default = inputs.nixvim.legacyPackages.${system}.makeNixvimWithModule (nixvimModule pkgs);
-    });
-    checks = eachSupportedSystem ({
-      pkgs,
-      system,
-    }: {
-      default = inputs.nixvim.lib.${system}.check.mkTestDerivationFromNixvimModule (nixvimModule pkgs);
+    }: let
+      nixvim = nixvimFor pkgs;
+    in
+      {default = nixvim.config.build.package;}
+      # The nightly overlay publishes no cached builds, so this compiles Neovim
+      # locally and is deliberately left out of `checks`.
+      // nixpkgs.lib.optionalAttrs (inputs.neovim-nightly.packages ? ${system}) {
+        nightly =
+          (nixvim.extendModules {
+            modules = [{package = inputs.neovim-nightly.packages.${system}.default;}];
+          }).config.build.package;
+      });
+    checks = eachSupportedSystem ({pkgs, ...}: {
+      default = (nixvimFor pkgs).config.build.test;
     });
     devShells = eachSupportedSystem ({pkgs, ...}: let
       # Single entry point so CI and local runs cannot drift apart.

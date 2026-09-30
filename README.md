@@ -16,6 +16,9 @@ nix run .
 
 This command builds and launches your configuration based on the default package setup.
 
+To run the same configuration on Neovim nightly instead, use `nix run .#nightly`. The
+nightly build is not cached anywhere, so it compiles Neovim locally.
+
 ### 2. Installing It on NixOS
 
 #### Step 1: Add as a Flake Input
