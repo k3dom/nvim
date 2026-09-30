@@ -34,7 +34,6 @@
     {
       group = "check_time";
       event = [
-        "FocusGained"
         "TermClose"
         "TermLeave"
       ];
