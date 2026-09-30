@@ -17,9 +17,6 @@
       standalonePlugins = [
         # `doc/recipes.md` collides with blink.cmp.
         "conform.nvim"
-        # Looks up `copilot/js/language-server.js` via `nvim_get_runtime_file`,
-        # and `/copilot` is not among the linked runtime paths.
-        "copilot.lua"
         # `queries/lua/injections.scm` collides with the treesitter queries.
         "snacks.nvim"
       ];

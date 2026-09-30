@@ -1,4 +1,4 @@
-{
+{pkgs, ...}: {
   plugins.lspconfig.enable = true;
   lsp.servers = {
     nixd.enable = true;
@@ -7,6 +7,9 @@
     dockerls.enable = true;
     tofu_ls.enable = true;
     rust_analyzer.enable = true;
-    tsgo.enable = true;
+    tsc = {
+      enable = true;
+      package = pkgs.typescript;
+    };
   };
 }
