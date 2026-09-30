@@ -3,13 +3,13 @@
     {
       mode = "n";
       key = "<leader>cd";
-      action = ":Copilot disable<cr>";
+      action = "<cmd>Copilot disable<cr>";
       options.desc = "Disable GitHub Copilot";
     }
     {
       mode = "n";
       key = "<leader>ce";
-      action = ":Copilot enable<cr>";
+      action = "<cmd>Copilot enable<cr>";
       options.desc = "Enable GitHub Copilot";
     }
   ];
