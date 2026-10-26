@@ -10,10 +10,7 @@
       nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (system:
         f {
           inherit system;
-          pkgs = import nixpkgs {
-            inherit system;
-            config.allowUnfreePredicate = pkg: nixpkgs.lib.getName pkg == "copilot-language-server";
-          };
+          pkgs = import nixpkgs {inherit system;};
         });
     nixvimFor = pkgs:
       inputs.nixvim.lib.evalNixvim {
