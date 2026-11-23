@@ -1,4 +1,4 @@
-{
+{lib, ...}: {
   viAlias = true;
   vimAlias = true;
 
@@ -27,14 +27,41 @@
   withRuby = false;
 
   colorschemes.nightfox.enable = true;
-  # Neovim reloads the colorscheme whenever 'background' changes, which the
-  # terminal_background autocmd keeps in line with the terminal.
   colorscheme = "fox";
   extraFiles."colors/fox.lua".text = ''
     require("nightfox.config").set_fox(vim.o.background == "light" and "dayfox" or "carbonfox")
     require("nightfox").load()
     vim.g.colors_name = "fox"
   '';
+
+  # Neovim reloads the colorscheme whenever 'background' changes. Its own
+  # handler that follows the terminal is gone by VimEnter once a colorscheme
+  # has set 'background', which nightfox's always do.
+  autoGroups.terminal_background = {};
+  autoCmd = [
+    {
+      group = "terminal_background";
+      event = ["TermResponse"];
+      nested = true;
+      desc = "Follow the terminal's background when it switches between light and dark";
+      callback = lib.nixvim.mkRaw ''
+        function(event)
+          local r, g, b = event.data.sequence:match("^\027%]11;rgba?:(%x+)/(%x+)/(%x+)")
+          if not r then
+            return
+          end
+          local function intensity(hex)
+            return tonumber(hex, 16) / (16 ^ #hex - 1)
+          end
+          local luminance = 0.299 * intensity(r) + 0.587 * intensity(g) + 0.114 * intensity(b)
+          local background = luminance < 0.5 and "dark" or "light"
+          if vim.o.background ~= background then
+            vim.o.background = background
+          end
+        end
+      '';
+    }
+  ];
 
   globals = {
     mapleader = " ";

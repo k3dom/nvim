@@ -6,33 +6,9 @@
     check_time = {};
     man_unlisted = {};
     mini_split = {};
-    terminal_background = {};
   };
 
   autoCmd = [
-    {
-      group = "terminal_background";
-      event = ["TermResponse"];
-      desc = "Follow the terminal's background when it switches between light and dark";
-      # Neovim's own handler only runs until VimEnter once a colorscheme has set
-      # 'background', which nightfox's colorschemes always do.
-      callback = lib.nixvim.mkRaw ''
-        function(event)
-          local r, g, b = event.data.sequence:match("^\027%]11;rgba?:(%x+)/(%x+)/(%x+)")
-          if not r then
-            return
-          end
-          local function intensity(hex)
-            return tonumber(hex, 16) / (16 ^ #hex - 1)
-          end
-          local luminance = 0.299 * intensity(r) + 0.587 * intensity(g) + 0.114 * intensity(b)
-          local background = luminance < 0.5 and "dark" or "light"
-          if vim.o.background ~= background then
-            vim.o.background = background
-          end
-        end
-      '';
-    }
     {
       group = "highlight_yank";
       event = ["TextYankPost"];
