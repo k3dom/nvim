@@ -26,10 +26,15 @@
   withPython3 = false;
   withRuby = false;
 
-  colorschemes.nightfox = {
-    enable = true;
-    flavor = "carbonfox";
-  };
+  colorschemes.nightfox.enable = true;
+  # Neovim reloads the colorscheme whenever 'background' changes, which the
+  # terminal_background autocmd keeps in line with the terminal.
+  colorscheme = "fox";
+  extraFiles."colors/fox.lua".text = ''
+    require("nightfox.config").set_fox(vim.o.background == "light" and "dayfox" or "carbonfox")
+    require("nightfox").load()
+    vim.g.colors_name = "fox"
+  '';
 
   globals = {
     mapleader = " ";
